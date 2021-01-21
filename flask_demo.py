@@ -9,7 +9,7 @@ from PIL import Image
 known_face_encodings = []
 known_face_names =[]
 
-for f in os.listdir('./face_db/'):
+for f in os.listdir('face_db/'):
     known_face_encodings.append(face_recognition.face_encodings(face_recognition.load_image_file('./face_db/'+f))[0])
     known_face_names.append(f.split('.')[0])
 
@@ -17,7 +17,6 @@ for f in os.listdir('./face_db/'):
 face_locations = []
 face_encodings = []
 face_names = []
-global process_this_frame
 process_this_frame = True
 
 face_names_dict = dict()
