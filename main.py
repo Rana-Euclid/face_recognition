@@ -10,6 +10,7 @@ def index():
 def gen(camera):
     while True:
         frame = camera.get_frame()
+
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
@@ -21,3 +22,4 @@ def video_feed():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+    
