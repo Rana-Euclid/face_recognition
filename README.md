@@ -1,5 +1,5 @@
 # Live Face Recognition App
-Face recognition for streaming input
+Face recognition on streaming webcam input
 
 # Installation
 - Create a new virtual environment and activate it
