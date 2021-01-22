@@ -5,8 +5,6 @@ import os
 import time
 from PIL import Image
 
-
-
 class VideoCamera(object):
     def __init__(self):
         self.video = cv2.VideoCapture(0)
@@ -30,10 +28,31 @@ class VideoCamera(object):
     def get_frame(self):
         _, frame = self.video.read()
         if self.process_this_frame:
-            frame, face_locations, face_names = self.process_frames(frame)
+            frame,  face_names = self.process_frames(frame)
         self.process_this_frame = not self.process_this_frame
         ret, jpeg = cv2.imencode('.jpg', frame)
-        return jpeg.tobytes()
+        # Persistence and delay logic along with sort
+        there = 30
+        not_there = 150
+        show_names=dict()
+        for name in face_names:
+            if name not in self.face_names_dict:
+                self.face_names_dict[name] = (1,0)
+            else:
+                self.face_names_dict[name] = (self.face_names_dict[name][0]+1, self.face_names_dict[name][1])
+        for name in self.face_names_dict:
+            if name not in face_names:
+                self.face_names_dict[name] = (self.face_names_dict[name][0], self.face_names_dict[name][1]+1)
+            if self.face_names_dict[name][1]>not_there:
+                self.face_names_dict[name] = (0, 0)
+            if self.face_names_dict[name][0]>there:
+                show_names[name]=self.face_names_dict[name][0]
+        show_names = sorted(show_names, key=show_names.get)
+        show_names_list = list(show_names)
+        if 'Unknown' in show_names_list:
+            show_names_list.remove('Unknown')
+        print(show_names_list)
+        return jpeg.tobytes(), show_names_list
 
     #function for processing frames
     def process_frames(self,frame):
@@ -87,7 +106,7 @@ class VideoCamera(object):
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, name, (left + 6, top-2), font, 1.0, (255, 255, 255), 1)
         
-        return frame , face_locations, face_names
+        return frame , face_names
 
 
 
