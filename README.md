@@ -1,4 +1,4 @@
-# face_recognition
+# Live Face Recognition App
 Face recognition for streaming input
 
 # Installation
